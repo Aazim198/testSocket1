@@ -76,31 +76,36 @@
     <script src="socket.io/socket.io.js"></script>
     <script>
         let messagebtn = document.querySelector('#messagebtn');
-        
+        let groupbtn = document.querySelector('#groupbtn');
         let sendMessage = document.querySelector('#sendMessage');
-
+        let joinGroup = document.querySelector('#joinGroup');
+        let custom_form =  document.querySelectorAll('.custom_form');
         let socket = io("http://localhost:3000/");
         socket.on('connect',()=>{
             console.log(`Client connected : ${socket.id}`);
             document.querySelector('.title.user').textContent = `User: ${socket.id}`; 
             socket.on('receiveMessage',(message)=>{
                 displayChatMsg(message,'receive')
-                // document.querySelector('.message_body').innerHTML  +=`<p class="message receive">${message}</p>`
             })
             socket.on('rxmsg',(message)=>{
                 displayChatMsg(message,'receive')
-                // document.querySelector('.message_body').innerHTML  +=`<p class="message receive">${msg}</p>`
             })
         
+        })
+        joinGroup.addEventListener('submit',(e)=>{
+            e.preventDefault();
+            // let groupId = groupbtn.value;
+            let room = groupbtn.value;
+            socket.emit('joinTheGroup',room)
         })
 
         sendMessage.addEventListener('submit',(e)=>{
             e.preventDefault();
-            let messagebtn = document.querySelector('#messagebtn').value;
-            socket.emit('sendMesage',messagebtn)
-            displayChatMsg(messagebtn,'sent')
-            // document.querySelector('.message_body').innerHTML  +=`<p class="message sent">${messagebtn}</p>`;
-            messagebtn = document.querySelector('#messagebtn').value ='';
+            let msg = messagebtn.value;
+            let room = groupbtn.value;
+            socket.emit('sendMesage',msg,room);
+            displayChatMsg(msg,'sent');
+            messagebtn.value ='';
         })
 
         function displayChatMsg(msg, sr){
