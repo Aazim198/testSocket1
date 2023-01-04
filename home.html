@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    .container {
+        max-width: 1200px;
+        margin: auto;
+    }
+    .container_wrapper {
+        margin: 20px;
+        padding: 20px;
+    }
+    .message_wrapper {
+        margin-bottom: 30px;
+        max-width: 550px;
+    }
+    .message_body {
+        min-height: 100px;
+        border: 1px solid red;
+        border-radius: 10px;
+    }
+    .message {
+        font-size: 18px;
+        padding: 5px 20px;
+        margin: 5px 0;
+        background: #71c271b3;
+        color: #b53b3b;
+    }
+    .sent{
+        text-align: right;
+    }
+    .receive{
+        text-align: left;
+    }
+    .custom_form{
+        margin-bottom: 20px;
+    }
+    input[type="submit"] {
+        font-size: 17px;
+        font-weight: 400;
+        padding: 5px 20px;
+    }
+    input[type="text"] {
+        padding: 8px 10px;
+        min-width: 500px;
+    }
+</style>
+<body>
+    <div class="container">
+        <div class="container_wrapper">
+            <div class="message_wrapper">
+                <div class="message_header">
+                    <h3 class="title user">User One: </h3>
+                </div>
+                <div class="message_body">
+                    <p class="message sent">hello, i am abcjj</p>
+                    <p class="message receive">Hey, i am not mnsfjfsh </p> 
+
+                </div>
+            </div>
+            <div class="form_wrapper">
+                <form method="get" class="custom_form" id="sendMessage">
+                    <input type="text" name="" id="messagebtn">
+                    <input type="submit" value="Send">
+                </form>
+                <form class="custom_form" method="get" id="joinGroup">
+                    <input type="text" name="" id="groupbtn">
+                    <input type="submit" value="Join Group">
+                </form>
+            </div>
+        </div>
+    </div>
+    <script src="socket.io/socket.io.js"></script>
+    <script>
+        let messagebtn = document.querySelector('#messagebtn');
+        
+        let sendMessage = document.querySelector('#sendMessage');
+
+        let socket = io("http://localhost:3000/");
+        socket.on('connect',()=>{
+            console.log(`Client connected : ${socket.id}`);
+            document.querySelector('.title.user').textContent = `User: ${socket.id}`; 
+            socket.on('receiveMessage',(message)=>{
+                console.log(message);
+                document.querySelector('.message_body').innerHTML  +=`<p class="message receive">${message}</p>`
+            })
+        
+        })
+
+        sendMessage.addEventListener('submit',(e)=>{
+            e.preventDefault();
+            let messagebtn = document.querySelector('#messagebtn').value;
+            socket.emit('sendMesage',messagebtn)
+            document.querySelector('.message_body').innerHTML  +=`<p class="message sent">${messagebtn}</p>`;
+            messagebtn = document.querySelector('#messagebtn').value ='';
+        })
+
+    </script>
+</body>
+</html>
