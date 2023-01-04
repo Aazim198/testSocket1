@@ -1,2 +1,7 @@
 Socket io app
-used for chatting purposes
+
+
+It is used for realtime communication.
+
+
+

@@ -15,16 +15,15 @@ app.get('/',(req,res)=>{
 })
 
 io.on('connection',(socket)=>{
-    console.log(`connection started with id:  ${socket.id}`);
-    
+    console.log(`connection started with id:  ${socket.id}`);    
     socket.on('sendMesage',(message)=>{
-        console.log(message);
+        // io.emit('rxmsg',message);
+        socket.broadcast.emit('rxmsg',message);
     })
     
-    socket.emit('receiveMessage','Hello from server')
+    // socket.emit('receiveMessage','Hello from server')
     socket.on('disconnect',()=>{
-        console.log(`connection closed!!`);
-    
+        console.log(`connection closed!!`);    
     })
 
    

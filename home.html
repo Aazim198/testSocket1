@@ -58,9 +58,7 @@
                     <h3 class="title user">User One: </h3>
                 </div>
                 <div class="message_body">
-                    <p class="message sent">hello, i am abcjj</p>
-                    <p class="message receive">Hey, i am not mnsfjfsh </p> 
-
+                    
                 </div>
             </div>
             <div class="form_wrapper">
@@ -86,8 +84,12 @@
             console.log(`Client connected : ${socket.id}`);
             document.querySelector('.title.user').textContent = `User: ${socket.id}`; 
             socket.on('receiveMessage',(message)=>{
-                console.log(message);
-                document.querySelector('.message_body').innerHTML  +=`<p class="message receive">${message}</p>`
+                displayChatMsg(message,'receive')
+                // document.querySelector('.message_body').innerHTML  +=`<p class="message receive">${message}</p>`
+            })
+            socket.on('rxmsg',(message)=>{
+                displayChatMsg(message,'receive')
+                // document.querySelector('.message_body').innerHTML  +=`<p class="message receive">${msg}</p>`
             })
         
         })
@@ -96,9 +98,14 @@
             e.preventDefault();
             let messagebtn = document.querySelector('#messagebtn').value;
             socket.emit('sendMesage',messagebtn)
-            document.querySelector('.message_body').innerHTML  +=`<p class="message sent">${messagebtn}</p>`;
+            displayChatMsg(messagebtn,'sent')
+            // document.querySelector('.message_body').innerHTML  +=`<p class="message sent">${messagebtn}</p>`;
             messagebtn = document.querySelector('#messagebtn').value ='';
         })
+
+        function displayChatMsg(msg, sr){
+            document.querySelector('.message_body').innerHTML  +=`<p class="message ${sr}">${msg}</p>`; 
+        }
 
     </script>
 </body>
